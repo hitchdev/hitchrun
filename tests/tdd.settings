@@ -1,0 +1,4 @@
+kaching: yes
+pause_on_failure: yes
+pause_on_success: yes
+cli_timeout: 240

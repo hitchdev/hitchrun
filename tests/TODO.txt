@@ -1,0 +1,6 @@
+* Invalidkey - Disallow args and kwargs test,
+* incorrect number of arguments, command not found, defaults.
+* pip-sync when running command.
+* unixpackage when running commands.
+* Upgrade packages to hitchreqs.txt.
+* pip compile upgrade -- including hitchrun, and pip
