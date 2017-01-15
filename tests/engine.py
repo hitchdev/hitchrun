@@ -30,20 +30,28 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         self.vm = Vagrant(self.path.hitch, box)
         self.vm = self.vm.synced_with(self.path.project, "/hitchrun/")
 
-        if not self.vm.snapshot_exists("ubuntu-1604-ready"):
-            self.vm.up()
-            self.long_run("sudo apt-get install python-setuptools -y")
-            self.long_run("sudo apt-get install python-pip python3 -y")
-            self.long_run("sudo apt-get install python-virtualenv -y")
-            self.run("virtualenv --python python3 ~/hvenv")
-
-            self.vm.take_snapshot("ubuntu-1604-ready")
+        if not self.vm.snapshot_exists("ubuntu-1604-installed"):
+            if not self.vm.snapshot_exists("ubuntu-1604-ready"):
+                self.vm.up()
+                self.long_run("sudo apt-get install python-setuptools -y")
+                self.long_run("sudo apt-get install build-essential -y")
+                self.long_run("sudo apt-get install python-pip -y")
+                self.long_run("sudo apt-get install python-virtualenv -y")
+                self.long_run("sudo apt-get install python3 -y")
+                self.run("virtualenv --python python3 ~/hvenv")
+                self.vm.take_snapshot("ubuntu-1604-ready")
+                self.vm.halt()
+            self.vm.restore_snapshot("ubuntu-1604-ready")
+            self.vm.sync()
+            self.long_run("~/hvenv/bin/pip install /hitchrun/")
+            self.vm.take_snapshot("ubuntu-1604-installed")
             self.vm.halt()
 
-        self.vm.restore_snapshot("ubuntu-1604-ready")
+        self.vm.restore_snapshot("ubuntu-1604-installed")
 
         self.vm.sync()
-        self.run("~/hvenv/bin/pip install /hitchrun/")
+        self.long_run("~/hvenv/bin/pip uninstall -y hitchrun")
+        self.long_run("~/hvenv/bin/pip install /hitchrun/")
 
         if "linkfile" in self.preconditions:
             self.run("echo {0} > {1}/linkfile".format(
@@ -52,7 +60,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
             ))
 
     def long_run(self, cmd):
-        self.run(cmd=cmd, timeout=160)
+        self.run(cmd=cmd, timeout=1500)
 
     def run(self, cmd=None, expect=None, timeout=10):
         self.process = self.vm.cmd(cmd).pexpect()

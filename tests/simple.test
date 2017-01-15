@@ -1,4 +1,4 @@
-- name: Run simple command
+- name: Run simple commands
   preconditions:
     linkfile:
       hvenv: /home/vagrant/hvenv
@@ -13,6 +13,9 @@
     - Run:
        cmd: ~/hvenv/bin/hitchrun commandvar1 C
        expect: Command C
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun humantime
+       expect: now
     - Run:
        cmd: ~/hvenv/bin/hitchrun help
        expect: Command A

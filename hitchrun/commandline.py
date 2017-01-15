@@ -3,6 +3,7 @@
 import os
 import sys
 from hitchrun import key_file
+from hitchrun import packages
 import argcomplete
 import argparse
 import sys
@@ -10,23 +11,11 @@ import imp
 from path import Path
 
 
-def hvenv():
-    """Get Hvenv folder."""
-    return Path(sys.executable).joinpath("..", "..").abspath()
-
-
-def linkfile():
-    """Get the hitch directory by working backwards from the virtualenv python."""
-    assert hvenv().joinpath("linkfile").exists()
-    assert Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip()).exists()
-    return Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip())
-
-
-
 def run():
     """Run hitch bootstrap CLI"""
+    packages.ensure_hitchreqs_synced()
     parser = argparse.ArgumentParser(add_help=False, prefix_chars=[None, ])
-    cc = key_file.KeyFile(imp.load_source("key", str(linkfile().joinpath("key.py"))))
+    cc = key_file.KeyFile(imp.load_source("key", str(packages.keypath().joinpath("key.py"))))
     parser.add_argument("commands", nargs='*', default=None).completer = cc.command_completer
     argcomplete.autocomplete(parser)
     commands = parser.parse_args().commands
@@ -50,7 +39,7 @@ def run():
             print()
             print(cc.commands[command]['helptext'])
         else:
-            print("Command '{0}' not found in {1}. Type 'k help' to see a full list of commands.".format(command, cc.hitchkey_file))
+            print("Command '{0}' not found in {1}. Type 'h help' to see a full list of commands.".format(command, cc.hitchkey_file))
     else:
         returnval = cc.run_command(commands[0], commands[1:])
 
