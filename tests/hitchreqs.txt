@@ -10,7 +10,7 @@ hitchpython==0.5.3
 hitchserve==0.5.0
 hitchsystem==0.1.4
 hitchtest==0.9.9
-hitchvm==0.1.7
+hitchvm==0.1.8
 humanize==0.5.1
 ipykernel==4.3.1
 ipython==4.1.2
