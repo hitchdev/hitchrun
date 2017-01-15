@@ -1,5 +1,7 @@
 import humanize
 import datetime
+from hitchrun import cwd, Path
+keypath = Path(__file__).abspath()
 
 
 def commanda():
@@ -16,6 +18,13 @@ def commandb():
 
 def commandvar1(variable1):
     print("Command {0}".format(variable1))
+
+
+def showcwd():
+    print(cwd)
+
+def showkeypath():
+    print(keypath)
 
 
 def humantime():

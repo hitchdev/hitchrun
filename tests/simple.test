@@ -17,5 +17,11 @@
        cmd: ~/hvenv/bin/hitchrun humantime
        expect: now
     - Run:
+       cmd: ~/hvenv/bin/hitchrun showcwd
+       expect: /home/vagrant
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun showkeypath
+       expect: /hitchrun
+    - Run:
        cmd: ~/hvenv/bin/hitchrun help
        expect: Command A
