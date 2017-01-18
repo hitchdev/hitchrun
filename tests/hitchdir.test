@@ -1,0 +1,10 @@
+- name: Run simple commands
+  preconditions:
+    linkfile:
+      hvenv: /home/vagrant/hvenv
+      folder: /hitchrun/tests/hitchfolder/hitch/
+  scenario:
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun commanda
+       expect: Command A ran
+       timeout: 90
