@@ -1,5 +1,8 @@
-* incorrect number of arguments, command not found, defaults.
-* pip-sync when running command.
+* /hitch directory.
+* hitchreqs.in
+* hitchreqs.in: new package added
+* hitchreqs.in: upgrade
+* TEST: pip-sync when running command and file changed.
 * unixpackage when running commands.
-* Upgrade packages to hitchreqs.txt.
-* pip compile upgrade -- including hitchrun, and pip
+* forking on github and using that code.
+* TEST: incorrect number of arguments, command not found, defaults.
