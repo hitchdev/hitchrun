@@ -17,7 +17,32 @@ def keypath():
 
 
 def frozenreqs():
+    """
+    Path to frozenreqs file.
+
+    This is a copy of hitchreqs.txt that is taken every time an installation
+    is done to use to check for changes.
+    """
     return Path(hvenv().joinpath("frozenreqs.txt"))
+
+
+def hitchreqsin():
+    """
+    Path to hitchreqs.in file.
+    """
+    return keypath().joinpath("hitchreqs.in")
+
+
+def compile_hitchreqs_in():
+    """
+    Run hitchreqs_in.
+    """
+    Command(hvenv().joinpath("bin", "pip-compile"))(
+        "--no-header",
+        "--output-file", "hitchreqs.txt",
+        "hitchreqs.in"
+    ).in_dir(keypath()).run()
+    print("Compiled new hitchreqs.txt")
 
 
 def ensure_hitchreqs_synced():

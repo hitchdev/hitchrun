@@ -1,0 +1,16 @@
+- name: Compile hitchreqs.in
+  preconditions:
+    linkfile:
+      hvenv: /home/vagrant/hvenv
+      folder: /hitchrun/tests/hitchreqsin/
+  scenario:
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun humantime
+       expect: ImportError
+       exit_code: 1
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun hitch compilereqs
+       expect: Compiled new hitchreqs.txt
+    - Run:
+       cmd: ~/hvenv/bin/hitchrun humantime
+       expect: now

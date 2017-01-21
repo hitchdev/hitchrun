@@ -62,7 +62,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
     def long_run(self, cmd):
         self.run(cmd=cmd, timeout=1500)
 
-    def run(self, cmd=None, expect=None, timeout=10):
+    def run(self, cmd=None, expect=None, timeout=60, exit_code=0):
         self.process = self.vm.cmd(cmd).pexpect()
 
         if sys.stdout.isatty():
@@ -75,7 +75,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
             self.process.expect(expect, timeout=timeout)
         self.process.expect(EOF, timeout=timeout)
         self.process.close()
-        assert self.process.exitstatus == 0
+        assert self.process.exitstatus == exit_code
 
     def lint(self, args=None):
         """Lint the source code."""
@@ -95,6 +95,9 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
 
     def on_failure(self):
         self.pause(self.stacktrace.to_template())
+
+    def sshin(self):
+        self.vm.cmd("bash").run()
 
     def on_success(self):
         """Ka-ching!"""
