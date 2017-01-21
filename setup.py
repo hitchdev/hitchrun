@@ -31,7 +31,7 @@ def read(*parts):
 
 
 setup(name="hitchrun",
-    version="0.1",
+    version=read('VERSION').replace('\n', ''),
     description="HitchRun - environment set up and command runner for hitchdev framework.",
     long_description=read('README.rst'),
     classifiers=[
