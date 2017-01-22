@@ -1,5 +1,5 @@
 from path import Path
-from commandlib import Command
+from commandlib import Command, CommandError
 import sys
 import os
 
@@ -55,6 +55,10 @@ def ensure_hitchreqs_synced():
         if frozenreqs().bytes().decode("utf8") == keypath().joinpath("hitchreqs.txt").bytes().decode('utf8'):
             return
 
-    Command(hvenv().joinpath("bin", "pip-sync"))("hitchreqs.txt").in_dir(keypath()).run()
+    try:
+        Command(hvenv().joinpath("bin", "pip-sync"))("hitchreqs.txt").in_dir(keypath()).run()
+    except CommandError:
+        print("Error installing hitchreqs.txt")
+        sys.exit(1)
     keypath().joinpath("hitchreqs.txt").copy(frozenreqs())
     os.execvp(sys.argv[0], sys.argv)

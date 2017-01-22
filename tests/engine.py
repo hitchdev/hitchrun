@@ -53,14 +53,27 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         self.long_run("~/hvenv/bin/pip uninstall -y hitchrun")
         self.long_run("~/hvenv/bin/pip install /hitchrun/")
 
-        if "linkfile" in self.preconditions:
-            self.run("echo {0} > {1}/linkfile".format(
-                self.preconditions['linkfile']['folder'],
-                self.preconditions['linkfile']['hvenv'],
-            ))
+        #if "linkfile" in self.preconditions:
+            #self.run("echo {0} > {1}/linkfile".format(
+                #self.preconditions['linkfile']['folder'],
+                #self.preconditions['linkfile']['hvenv'],
+            #))
+
+        self.run("mkdir ~/keydir")
+        for filename, contents in self.preconditions.get("files", {}).items():
+            self.run("""echo "{0}" > ~/keydir/{1}""".format(contents.replace('"', '""'), filename))
+        self.run("echo /home/vagrant/keydir > /home/vagrant/hvenv/linkfile")
 
     def long_run(self, cmd):
         self.run(cmd=cmd, timeout=1500)
+
+    def hitchrun(self, args="", expect=None, timeout=60, exit_code=0):
+        self.run(
+            "~/hvenv/bin/hitchrun " + args,
+            expect=expect,
+            timeout=timeout,
+            exit_code=exit_code
+        )
 
     def run(self, cmd=None, expect=None, timeout=60, exit_code=0):
         self.process = self.vm.cmd(cmd).pexpect()
