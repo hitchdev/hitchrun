@@ -15,7 +15,7 @@ class KeyFile(object):
         self.commands = {}
         for method_name, actual_method in inspect.getmembers(self.hitchkey_module, inspect.isfunction):
             if not method_name.startswith("_") and inspect.getmodule(actual_method) == self.hitchkey_module:
-                docstring = "" if actual_method.__doc__ is None else actual_method.__doc__
+                docstring = "" if actual_method.__doc__ is None else actual_method.__doc__.strip()
                 argspec = inspect.getargspec(actual_method)
                 args = argspec.args
                 varargs = argspec.varargs

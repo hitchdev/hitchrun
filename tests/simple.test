@@ -21,12 +21,14 @@
         keypath = Path(__file__).abspath()
 
         def commanda():
-            """Command A help.
+            """
+            Command A help.
             """
             print("Command A ran")
 
         def commandb():
-            """Command B help.
+            """
+            Command B help.
             """
             print("Command B ran")
 

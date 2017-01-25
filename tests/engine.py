@@ -23,8 +23,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
 
         if self.path.state.exists():
             self.path.state.rmtree(ignore_errors=True)
-        else:
-            self.path.state.mkdir()
+        self.path.state.mkdir()
 
         box = StandardBox(Path("~/.hitchpkg").expand(), "ubuntu-trusty-64")
         self.vm = Vagrant(self.path.hitch, box)
@@ -49,20 +48,22 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
 
         self.vm.restore_snapshot("ubuntu-1604-installed")
 
-        self.vm.sync()
-        self.long_run("~/hvenv/bin/pip uninstall -y hitchrun")
-        self.long_run("~/hvenv/bin/pip install /hitchrun/")
-
-        #if "linkfile" in self.preconditions:
-            #self.run("echo {0} > {1}/linkfile".format(
-                #self.preconditions['linkfile']['folder'],
-                #self.preconditions['linkfile']['hvenv'],
-            #))
-
-        self.run("mkdir ~/keydir")
         for filename, contents in self.preconditions.get("files", {}).items():
-            self.run("""echo "{0}" > ~/keydir/{1}""".format(contents.replace('"', '""'), filename))
-        self.run("echo /home/vagrant/keydir > /home/vagrant/hvenv/linkfile")
+            directory = self.path.project.joinpath("state", filename).dirname()
+            if not directory.exists():
+                directory.makedirs()
+            self.path.project.joinpath("state", filename).write_text(contents)
+
+        self.vm.sync()
+        self.run("echo /hitchrun/state/{0} > /home/vagrant/hvenv/linkfile".format(
+            self.preconditions.get("linkfile", "")
+        ))
+        self.run("/home/vagrant/hvenv/bin/pip uninstall hitchrun -y")
+        self.run("/home/vagrant/hvenv/bin/pip install /hitchrun/")
+        self.hitchrun("")
+        self.run("/home/vagrant/hvenv/bin/pip uninstall hitchrun -y")
+        self.run("/home/vagrant/hvenv/bin/pip install /hitchrun/")
+
 
     def long_run(self, cmd):
         self.run(cmd=cmd, timeout=1500)
