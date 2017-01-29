@@ -60,7 +60,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         ))
         self.run("/home/vagrant/hvenv/bin/pip uninstall hitchrun -y")
         self.run("/home/vagrant/hvenv/bin/pip install /hitchrun/")
-        self.hitchrun("")
+        self.hitchrun("", exit_code=None)
         self.run("/home/vagrant/hvenv/bin/pip uninstall hitchrun -y")
         self.run("/home/vagrant/hvenv/bin/pip install /hitchrun/")
 
@@ -89,7 +89,8 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
             self.process.expect(expect, timeout=timeout)
         self.process.expect(EOF, timeout=timeout)
         self.process.close()
-        assert self.process.exitstatus == exit_code
+        if exit_code is not None:
+            assert self.process.exitstatus == exit_code
 
     def lint(self, args=None):
         """Lint the source code."""

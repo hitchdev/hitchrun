@@ -1,7 +1,5 @@
-* /hitch directory.
-* hitchreqs.in
-* hitchreqs.in: new package added
-* hitchreqs.in: upgrade
+* pip-tools fix properly this time
+* @expect(CommandError, "lint failed")
 * TEST: pip-sync when running command and file changed.
 * unixpackage when running commands.
 * forking on github and using that code.

@@ -1,8 +1,5 @@
 - name: Run simple commands
   preconditions:
-    #linkfile:
-      #hvenv: /home/vagrant/hvenv
-      #folder: /hitchrun/tests/simple/
     files:
       hitchreqs.txt: |
         argcomplete==1.7.0
@@ -17,7 +14,7 @@
       key.py: |
         import humanize
         import datetime
-        from hitchrun import cwd, Path
+        from hitchrun import cwd, genpath, Path
         keypath = Path(__file__).abspath()
 
         def commanda():
@@ -41,6 +38,9 @@
         def showkeypath():
             print(keypath)
 
+        def showgenpath():
+            print(genpath)
+
         def humantime():
             """Use a library."""
             print(humanize.naturaltime(datetime.datetime.now()))
@@ -59,6 +59,9 @@
        expect: now
     - hitchrun:
        args: showcwd
+       expect: /home/vagrant
+    - hitchrun:
+       args: showgenpath
        expect: /home/vagrant
     - hitchrun:
        args: showkeypath
