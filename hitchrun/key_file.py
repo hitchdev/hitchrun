@@ -1,4 +1,5 @@
 import inspect
+import prettystack
 import signal
 import sys
 import os
@@ -22,9 +23,9 @@ class KeyFile(object):
                 keyargs = argspec.keywords
                 defaults = argspec.defaults
 
-                if varargs is not None and keyargs is not None:
-                    sys.stderr.write("Method '{0}' in key.py cannot have both *args and **kwargs.\n".format(method_name))
-                    sys.exit(1)
+                #if varargs is not None and keyargs is not None:
+                    #sys.stderr.write("Method '{0}' in key.py cannot have both *args and **kwargs.\n".format(method_name))
+                    #sys.exit(1)
 
                 minargs = maxargs = 0
                 if varargs is not None or keyargs is not None:
@@ -106,11 +107,11 @@ class KeyFile(object):
                 signal.signal(signal.SIGTERM, signal_handler)
 
                 # Run command
-                returnvalue = getattr(self.hitchkey_module, command)(*command_args)
-
-                # If command returned something, print it
-                if returnvalue is not None:
-                    sys.stdout.write("{0}\n".format(returnvalue))
+                try:
+                    return getattr(self.hitchkey_module, command)(*command_args)
+                except Exception as error:
+                    sys.stderr.write(prettystack.PrettyStackTemplate().to_console().current_stacktrace())
+                    return 1
             else:
                 sys.stderr.write("Incorrect number of arguments for command '%s'.\n" % command)
                 sys.stderr.write("Arguments used: \"%s\"\n" % ', '.join(command_args))

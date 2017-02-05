@@ -1,6 +1,7 @@
 from hitchrun import commandline
 from path import Path
 from hitchrun.maintenance import hitch_maintenance
+from hitchrun.decorators import expected
 import os
 import sys
 
