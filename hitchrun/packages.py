@@ -33,6 +33,13 @@ def hitchreqsin():
     return keypath().joinpath("hitchreqs.in")
 
 
+def hitchreqstxt():
+    """
+    Path to hitchreqs.txt file.
+    """
+    return keypath().joinpath("hitchreqs.txt")
+
+
 def compile_hitchreqs_in():
     """
     Run hitchreqs_in.
@@ -55,10 +62,13 @@ def ensure_hitchreqs_synced():
         if frozenreqs().bytes().decode("utf8") == keypath().joinpath("hitchreqs.txt").bytes().decode('utf8'):
             return
 
+    if hitchreqsin().exists() and not hitchreqstxt().exists():
+        Command(hvenv().joinpath("bin", "pip-compile"))("hitchreqs.in").in_dir(keypath()).run()
+
     try:
         Command(hvenv().joinpath("bin", "pip-sync"))("hitchreqs.txt").in_dir(keypath()).run()
     except CommandError:
-        print("Error installing hitchreqs.txt")
+        print("Error installing from hitchreqs.txt")
         sys.exit(1)
     keypath().joinpath("hitchreqs.txt").copy(frozenreqs())
     os.execvp(sys.argv[0], sys.argv)
