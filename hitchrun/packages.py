@@ -62,6 +62,9 @@ def ensure_hitchreqs_synced():
         if frozenreqs().bytes().decode("utf8") == keypath().joinpath("hitchreqs.txt").bytes().decode('utf8'):
             return
 
+    if not hitchreqsin().exists() and not hitchreqstxt().exists():
+        hitchreqsin().write_text("hitchrun\n")
+
     if hitchreqsin().exists() and not hitchreqstxt().exists():
         Command(hvenv().joinpath("bin", "pip-compile"))("hitchreqs.in").in_dir(keypath()).run()
 
