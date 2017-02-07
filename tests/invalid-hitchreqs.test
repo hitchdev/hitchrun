@@ -26,5 +26,5 @@
   scenario:
     - Run:
        cmd: ~/hvenv/bin/hitchrun command
-       expect: Error installing hitchreqs
+       expect: Error installing from hitchreqs.txt
        exit_code: 1

@@ -26,7 +26,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         self.path.state.mkdir()
 
         box = StandardBox(Path("~/.hitchpkg").expand(), "ubuntu-trusty-64")
-        self.vm = Vagrant(self.path.hitch, box)
+        self.vm = Vagrant("hitchrun", box, self.path.hitch)
         self.vm = self.vm.synced_with(self.path.project, "/hitchrun/")
 
         if not self.vm.snapshot_exists("ubuntu-1604-installed"):
