@@ -1,8 +1,12 @@
-import inspect
+from path import Path
 import prettystack
+import inspect
 import signal
 import sys
 import os
+
+
+THIS_DIRECTORY = Path(__file__).realpath().dirname()
 
 
 class KeyFile(object):
@@ -110,7 +114,14 @@ class KeyFile(object):
                 try:
                     return getattr(self.hitchkey_module, command)(*command_args)
                 except Exception as error:
-                    sys.stderr.write(prettystack.PrettyStackTemplate().to_console().current_stacktrace())
+                    sys.stderr.write(
+                        prettystack.PrettyStackTemplate()\
+                                   .to_console()\
+                                   .only_after_file(
+                                       THIS_DIRECTORY.joinpath("key_file.py")
+                                   )\
+                                   .current_stacktrace()\
+                    )
                     return 1
             else:
                 sys.stderr.write("Incorrect number of arguments for command '%s'.\n" % command)
