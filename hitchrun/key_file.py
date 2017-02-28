@@ -117,11 +117,12 @@ class KeyFile(object):
                     sys.stderr.write(
                         prettystack.PrettyStackTemplate()\
                                    .to_console()\
-                                   .only_after_file(
+                                   .cut_calling_code(
                                        THIS_DIRECTORY.joinpath("key_file.py")
                                    )\
                                    .current_stacktrace()\
                     )
+                    sys.stderr.write('\n')
                     return 1
             else:
                 sys.stderr.write("Incorrect number of arguments for command '%s'.\n" % command)
