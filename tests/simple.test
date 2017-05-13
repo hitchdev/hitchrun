@@ -17,12 +17,10 @@
       randommodule.py: |
         VALUE = "sometext"
       key.py: |
+        from randommodule import VALUE
         import humanize
         import datetime
-        from hitchrun import cwd, genpath, Path
-        from randommodule import VALUE
 
-        keypath = Path(__file__).abspath()
 
         def commanda():
             """
@@ -40,13 +38,20 @@
             print("Command {0}".format(variable1))
 
         def showcwd():
-            print(cwd)
+            """Show current working directory."""
+            print(DIR.cur)
 
         def showkeypath():
-            print(keypath)
+            """Directory where this file is located."""
+            print(DIR.key)
 
         def showgenpath():
-            print(genpath)
+            """Gen directory is (~/.hitch/<< code >>/)."""
+            print(DIR.gen)
+
+        def showprojectpath():
+            """Project path is path above directory containing key.py."""
+            print(DIR.project)
 
         def humantime():
             """Use a library."""
@@ -75,6 +80,9 @@
        expect: /home/vagrant
     - hitchrun:
        args: showkeypath
+       expect: /hitchrun/state
+    - hitchrun:
+       args: showprojectpath
        expect: /hitchrun
     - hitchrun:
        args: importmodule

@@ -1,3 +1,4 @@
+from hitchrun import packages
 from path import Path
 import prettystack
 import inspect
@@ -100,11 +101,13 @@ class KeyFile(object):
         """Run a HitchKey command with a list of command_args."""
         if command in self.command_list():
             if self.commands[command]['minargs'] <= len(command_args) <= self.commands[command]['maxargs']:
-                # Feed module the relevant directories
-                keydirectory = os.path.abspath(os.path.dirname(self.hitchkey_file))
-                self.hitchkey_module.KEYDIR = keydirectory
-                self.hitchkey_module.CWD = os.getcwd()
-                os.chdir(keydirectory)
+                # Feed module all the relevant directories
+                self.hitchkey_module.DIR = packages.PathGroup(
+                    key=Path(self.hitchkey_file).abspath().dirname(),
+                    cur=Path(os.getcwd()),
+                    gen=Path(packages.hvenv().parent),
+                    project=Path(self.hitchkey_file).abspath().dirname().parent,
+                )
 
                 # Decide what to do with CTRL-C or SIGTERM
                 ignore_ctrlc = hasattr(getattr(self.hitchkey_module, command), 'ignore_ctrlc')

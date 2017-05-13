@@ -4,6 +4,16 @@ import sys
 import os
 
 
+class PathGroup(object):
+    """Represent a group of file paths."""
+
+    def __init__(self, **paths):
+        """Create a group of paths."""
+        for path_name, path_value in paths.items():
+            assert Path(path_name)
+            setattr(self, path_name, path_value)
+
+
 def hvenv():
     """Get Hvenv folder."""
     return Path(sys.executable).joinpath("..", "..").abspath()
