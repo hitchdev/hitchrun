@@ -1,5 +1,4 @@
-* pip-tools fix properly this time
-* @expect(CommandError, "lint failed")
+* Prettystack upon import of key.
 * TEST: pip-sync when running command and file changed.
 * unixpackage when running commands.
 * forking on github and using that code.
