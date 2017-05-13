@@ -14,10 +14,14 @@
         path.py==10.1
         pip-tools==1.8.0
         six==1.10.0
+      randommodule.py: |
+        VALUE = "sometext"
       key.py: |
         import humanize
         import datetime
         from hitchrun import cwd, genpath, Path
+        from randommodule import VALUE
+
         keypath = Path(__file__).abspath()
 
         def commanda():
@@ -47,6 +51,9 @@
         def humantime():
             """Use a library."""
             print(humanize.naturaltime(datetime.datetime.now()))
+
+        def importmodule():
+            print(VALUE)
   scenario:
     - hitchrun:
        args: commanda
@@ -69,6 +76,9 @@
     - hitchrun:
        args: showkeypath
        expect: /hitchrun
+    - hitchrun:
+       args: importmodule
+       expect: sometext
     - hitchrun:
        args: help
        expect: Command A

@@ -15,7 +15,7 @@ def run():
     """Run hitch bootstrap CLI"""
     packages.ensure_hitchreqs_synced()
     parser = argparse.ArgumentParser(add_help=False, prefix_chars=[None, ])
-    cc = key_file.KeyFile(imp.load_source("key", str(packages.keypath().joinpath("key.py"))))
+    cc = key_file.KeyFile(packages.keypath())
     parser.add_argument("commands", nargs='*', default=None).completer = cc.command_completer
     argcomplete.autocomplete(parser)
     commands = parser.parse_args().commands

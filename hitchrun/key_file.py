@@ -3,6 +3,7 @@ import prettystack
 import inspect
 import signal
 import sys
+import imp
 import os
 
 
@@ -12,9 +13,13 @@ THIS_DIRECTORY = Path(__file__).realpath().dirname()
 class KeyFile(object):
     """Representation of the user's key.py file."""
 
-    def __init__(self, hitchkey_module):
+    def __init__(self, keypath):
         """Create a representation of the user's key.py file through code inspection."""
-        self.hitchkey_module = hitchkey_module
+        sys.path.append(str(keypath))
+        self.hitchkey_module = imp.load_source(
+            "key",
+            str(keypath.joinpath("key.py")),
+        )
         self.hitchkey_file = inspect.getfile(self.hitchkey_module)
 
         self.commands = {}
