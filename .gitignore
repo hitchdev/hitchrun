@@ -8,3 +8,4 @@ tests/.hitch
 tests/boxcache
 state/
 hitchrun.egg-info/
+__pycache__
