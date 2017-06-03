@@ -39,7 +39,11 @@ def run():
             print()
             print(cc.commands[command]['helptext'])
         else:
-            print("Command '{0}' not found in {1}. Type 'h help' to see a full list of commands.".format(command, cc.hitchkey_file))
+            print(
+                "Command '{0}' not found in {1}. Type 'h help' to see a full list of commands.".format(
+                    command, cc.hitchkey_file
+                )
+            )
     else:
         returnval = cc.run_command(commands[0], commands[1:])
 
