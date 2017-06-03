@@ -40,10 +40,10 @@ Catch exceptions:
             raise ExpectedException("message")
   scenario:
     - hitchrun:
-       args: uncaught
-       expect: UnexpectedException
-       exit_code: 1
-    - hitchrun:
        args: expected_exception
        expect: ExpectedException
+       exit_code: 1
+    - hitchrun:
+       args: uncaught
+       expect: UnexpectedException
        exit_code: 1
