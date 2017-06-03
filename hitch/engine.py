@@ -14,6 +14,8 @@ from pexpect import EOF
 import sys
 import hitchstory
 from hitchrun import genpath
+from strictyaml import Int
+from hitchstory import validate
 
 
 class Paths(object):
@@ -92,6 +94,7 @@ class Engine(hitchstory.BaseEngine):
             exit_code=exit_code
         )
 
+    @validate(exit_code=Int())
     def run(self, cmd=None, expect=None, timeout=60, exit_code=0):
         self.process = self.vm.cmd(cmd).pexpect()
 
@@ -106,7 +109,7 @@ class Engine(hitchstory.BaseEngine):
         self.process.expect(EOF, timeout=timeout)
         self.process.close()
         if exit_code is not None:
-            assert self.process.exitstatus == exit_code
+            assert int(self.process.exitstatus) == int(exit_code)
 
     def lint(self, args=None):
         """Lint the source code."""
@@ -125,7 +128,7 @@ class Engine(hitchstory.BaseEngine):
         self.ipython(message=message)
 
     def on_failure(self):
-        #self.pause(self.stacktrace.to_template())
+        #self.pause()
         pass
 
     def sshin(self):
