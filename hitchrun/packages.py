@@ -62,6 +62,15 @@ def compile_hitchreqs_in():
     print("Compiled new hitchreqs.txt")
 
 
+def pip_sync():
+    try:
+        Command(hvenv().joinpath("bin", "pip-sync"))("hitchreqs.txt").in_dir(keypath()).run()
+    except CommandError:
+        print("Error installing from hitchreqs.txt")
+        sys.exit(1)
+    keypath().joinpath("hitchreqs.txt").copy(frozenreqstxt())
+
+
 def ensure_hitchreqs_synced():
     """
     Check packages installed are in sync with what is in hitchreqs.txt.
@@ -78,10 +87,5 @@ def ensure_hitchreqs_synced():
     if hitchreqsin().exists() and not hitchreqstxt().exists():
         Command(hvenv().joinpath("bin", "pip-compile"))("hitchreqs.in").in_dir(keypath()).run()
 
-    try:
-        Command(hvenv().joinpath("bin", "pip-sync"))("hitchreqs.txt").in_dir(keypath()).run()
-    except CommandError:
-        print("Error installing from hitchreqs.txt")
-        sys.exit(1)
-    keypath().joinpath("hitchreqs.txt").copy(frozenreqs())
+    pip_sync()
     os.execvp(sys.argv[0], sys.argv)
