@@ -72,10 +72,10 @@ def deploy(version):
     """
     Deploy to pypi as specified version.
     """
-    version_file = KEYPATH.parent.joinpath("VERSION")
+    version_file = DIR.project.joinpath("VERSION")
     old_version = version_file.bytes().decode('utf8')
     if version_file.bytes().decode("utf8") != version:
-        KEYPATH.parent.joinpath("VERSION").write_text(version)
+        DIR.project.joinpath("VERSION").write_text(version)
         git("add", "VERSION").run()
         git("commit", "-m", "RELEASE: Version {0} -> {1}".format(
             old_version,
@@ -86,10 +86,10 @@ def deploy(version):
         git("push", "origin", version).run()
     else:
         git("push").run()
-    python("setup.py", "sdist").in_dir(KEYPATH.parent).run()
+    python("setup.py", "sdist").in_dir(DIR.project).run()
     python(
         "-m", "twine", "upload", "dist/strictyaml-{0}.tar.gz".format(version)
-    ).in_dir(KEYPATH.parent).run()
+    ).in_dir(DIR.project).run()
 
 
 def docgen():
