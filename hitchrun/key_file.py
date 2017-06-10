@@ -104,7 +104,7 @@ class KeyFile(object):
                 # Feed module all the relevant directories
                 self.hitchkey_module.DIR = packages.PathGroup(
                     key=Path(self.hitchkey_file).abspath().dirname(),
-                    cur=Path(os.getcwd()),
+                    cur=Path(os.getcwd()).abspath(),
                     gen=Path(packages.hvenv().parent),
                     project=Path(self.hitchkey_file).abspath().dirname().parent,
                 )

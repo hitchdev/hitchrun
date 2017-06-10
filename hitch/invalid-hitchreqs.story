@@ -9,6 +9,9 @@ Invalid hitchreqs:
 
         def command():
             print("This should never run")
+      hitchreqs.in: |
+        hitchrun
+        requests
       hitchreqs.txt: |
         argcomplete==1.7.0
         click==6.7
@@ -26,5 +29,5 @@ Invalid hitchreqs:
   scenario:
     - Run:
        cmd: ~/hvenv/bin/hitchrun command
-       expect: Error installing from hitchreqs.txt
+       expect: Error compiling hitchreqs.txt
        exit_code: 1
