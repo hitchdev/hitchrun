@@ -72,6 +72,7 @@ def deploy(version):
     """
     Deploy to pypi as specified version.
     """
+    git = Command("git").in_dir(DIR.project)
     version_file = DIR.project.joinpath("VERSION")
     old_version = version_file.bytes().decode('utf8')
     if version_file.bytes().decode("utf8") != version:
