@@ -27,7 +27,7 @@ def test(*words):
     """
     print(
         StoryCollection(
-            pathq(Path(KEYDIR)).ext("story"), Engine(Path(KEYDIR), {"overwrite artefacts": True})
+            pathq(DIR.key).ext("story"), Engine(DIR.key, {"overwrite artefacts": True})
         ).shortcut(*words).play().report()
     )
 
@@ -39,7 +39,7 @@ def ci():
     #lint()
     print(
         StoryCollection(
-            pathq(Path(KEYDIR)).ext("story"), Engine(Path(KEYDIR), {})
+            pathq(DIR.key).ext("story"), Engine(DIR.key, {})
         ).ordered_by_name().play().report()
     )
 
@@ -49,12 +49,12 @@ def lint():
     Lint all code.
     """
     python("-m", "flake8")(
-        Path(KEYDIR).parent.joinpath("hitchrun"),
+        DIR.project.joinpath("hitchrun"),
         "--max-line-length=100",
         "--exclude=__init__.py",
     ).run()
     python("-m", "flake8")(
-        Path(KEYDIR).joinpath("key.py"),
+        DIR.project.joinpath("key.py"),
         "--max-line-length=100",
         "--exclude=__init__.py",
     ).run()
@@ -89,7 +89,7 @@ def deploy(version):
         git("push").run()
     python("setup.py", "sdist").in_dir(DIR.project).run()
     python(
-        "-m", "twine", "upload", "dist/strictyaml-{0}.tar.gz".format(version)
+        "-m", "twine", "upload", "dist/hitchrun-{0}.tar.gz".format(version)
     ).in_dir(DIR.project).run()
 
 
@@ -97,7 +97,7 @@ def docgen():
     """
     Generate documentation.
     """
-    docpath = Path(KEYDIR).parent.joinpath("docs")
+    docpath = DIR.project.joinpath("docs")
 
     if not docpath.exists():
         docpath.mkdir()
