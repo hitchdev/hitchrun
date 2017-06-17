@@ -10,11 +10,9 @@ class PathGroup(object):
     def __init__(self, **paths):
         """Create a group of paths."""
         for path_name, path_value in paths.items():
-            assert Path(path_value).exists(), "{0} does not exist".format(path_value)
             setattr(self, path_name, path_value)
 
     def __setattr__(self, name, path):
-        assert Path(path).exists(), "{0} does not exist".format(name)
         self.__dict__[name] = path
 
 
@@ -110,35 +108,36 @@ def ensure_hitchreqs_synced():
     If not, run pip-sync and re-run everything to ensure that everything is run
     with the correct packages installed.
     """
-    trigger = False
+    trigger_rerun = False
+    path = paths()
 
-    if not hitchreqsin().exists() and hitchreqstxt().exists():
+    if path.hitchreqsin.exists() and not path.hitchreqstxt.exists():
         print("hitchreqs.in must exist if hitchreqs.txt exists")
         sys.exit(1)
 
-    if not hitchreqsin().exists() and not hitchreqstxt().exists():
-        print("No hitchreqs.in or hitchreqs.txt exists, creating default")  
+    if not path.hitchreqsin.exists() and not path.hitchreqstxt.exists():
+        print("No hitchreqs.in or hitchreqs.txt exists, creating default")
         hitchreqsin().write_text("hitchrun\n")
         compile_hitchreqs_in()
         pip_sync()
-        trigger = True
+        trigger_rerun = True
 
 
-    if not frozenreqsin().exists() or not frozenreqstxt().exists():
+    if not path.frozenreqsin.exists() or not path.frozenreqstxt.exists():
         print("First run")
         compile_hitchreqs_in()
-        trigger = True
+        trigger_rerun = True
 
     if frozenreqsin().bytes().decode('utf8') != keypath().joinpath("hitchreqs.in").bytes().decode('utf8'):
         print("hitchreqs.in changed, re-compiling hitchreqs.txt")
         compile_hitchreqs_in()
-        trigger = True
+        trigger_rerun = True
 
     if not frozenreqstxt().exists() or \
         frozenreqstxt().bytes().decode("utf8") != keypath().joinpath("hitchreqs.txt").bytes().decode('utf8'):
         print("hitchreqs.txt changed, re-syncing packages")
         pip_sync()
-        trigger = True
+        trigger_rerun = True
 
-    if trigger:
+    if trigger_rerun:
         os.execvp(sys.argv[0], sys.argv)
