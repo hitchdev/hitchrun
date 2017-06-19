@@ -17,11 +17,23 @@ class KeyFile(object):
     def __init__(self, keypath):
         """Create a representation of the user's key.py file through code inspection."""
         sys.path.append(str(keypath))
+
+        self.hitchkey_file = str(keypath.joinpath("key.py"))
+
+        # Feed module all the relevant directories
+        sys.modules['hitchrun'].DIR = packages.PathGroup(
+            key=Path(self.hitchkey_file).abspath().dirname(),
+            cur=Path(os.getcwd()).abspath(),
+            gen=Path(packages.hvenv().parent),
+            project=Path(self.hitchkey_file).abspath().dirname().parent,
+            share=Path(packages.hvenv().parent.parent.joinpath("share")),
+        )
+
+        # Import module
         self.hitchkey_module = imp.load_source(
             "key",
-            str(keypath.joinpath("key.py")),
+            self.hitchkey_file,
         )
-        self.hitchkey_file = inspect.getfile(self.hitchkey_module)
 
         self.commands = {}
         for method_name, actual_method in inspect.getmembers(self.hitchkey_module, inspect.isfunction):
@@ -33,9 +45,13 @@ class KeyFile(object):
                 keyargs = argspec.keywords
                 defaults = argspec.defaults
 
-                #if varargs is not None and keyargs is not None:
-                    #sys.stderr.write("Method '{0}' in key.py cannot have both *args and **kwargs.\n".format(method_name))
-                    #sys.exit(1)
+                if varargs is not None and keyargs is not None:
+                    sys.stderr.write(
+                        "Method '{0}' in key.py cannot have both *args and **kwargs.\n".format(
+                            method_name
+                        )
+                    )
+                    sys.exit(1)
 
                 minargs = maxargs = 0
                 if varargs is not None or keyargs is not None:
@@ -101,14 +117,6 @@ class KeyFile(object):
         """Run a HitchKey command with a list of command_args."""
         if command in self.command_list():
             if self.commands[command]['minargs'] <= len(command_args) <= self.commands[command]['maxargs']:
-                # Feed module all the relevant directories
-                self.hitchkey_module.DIR = packages.PathGroup(
-                    key=Path(self.hitchkey_file).abspath().dirname(),
-                    cur=Path(os.getcwd()).abspath(),
-                    gen=Path(packages.hvenv().parent),
-                    project=Path(self.hitchkey_file).abspath().dirname().parent,
-                )
-
                 # Decide what to do with CTRL-C or SIGTERM
                 ignore_ctrlc = hasattr(getattr(self.hitchkey_module, command), 'ignore_ctrlc')
                 def signal_handler(signal, frame):

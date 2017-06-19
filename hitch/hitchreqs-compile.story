@@ -1,7 +1,10 @@
 Compile hitchreqs.in:
   description: |
     When hitchreqs.in is changed, hitchreqs.txt should reflect
-    the change and the extra package or packages should be installed.
+    the change and the extra package or packages should be installed
+    and the command should be run with the package.
+    
+    hitchreqs.txt in this instance does not have humanize listed.
   preconditions:
     files:
       hitchreqs.in: |

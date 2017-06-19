@@ -7,6 +7,7 @@ Run simple commands:
       randommodule.py: |
         VALUE = "sometext"
       key.py: |
+        from hitchrun import DIR
         from randommodule import VALUE
         import humanize
         import datetime
@@ -42,6 +43,10 @@ Run simple commands:
             """Project path is path above directory containing key.py."""
             print(DIR.project)
 
+        def showsharepath():
+            """Project path is path above directory containing key.py."""
+            print(DIR.share)
+
         def humantime():
             """Use a library."""
             print(humanize.naturaltime(datetime.datetime.now()))
@@ -73,6 +78,9 @@ Run simple commands:
     - hitchrun:
        args: showprojectpath
        expect: /hitchrun
+    - hitchrun:
+       args: showsharepath
+       expect: /home/share
     - hitchrun:
        args: importmodule
        expect: sometext

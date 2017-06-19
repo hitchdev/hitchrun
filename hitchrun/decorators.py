@@ -1,4 +1,5 @@
 from functools import wraps
+import inspect
 import colorama
 import sys
 
@@ -20,6 +21,7 @@ def expected(exception_class):
                     )
                 )
                 return 1
+        with_exception_handling.__signature__ = inspect.signature(method)
         return with_exception_handling
     return wrapper
 
