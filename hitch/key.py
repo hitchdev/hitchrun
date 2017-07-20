@@ -4,7 +4,7 @@ from commandlib import run, Command
 import hitchpython
 import hitchserve
 from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
-from hitchrun import expected
+from hitchrun import DIR, expected
 from path import Path
 import strictyaml
 from strictyaml import MapPattern, Str, Seq, Map
@@ -13,7 +13,7 @@ import hitchtest
 import hitchdoc
 
 from simex import DefaultSimex
-from hitchrun import genpath, hitch_maintenance
+from hitchrun import hitch_maintenance
 from commandlib import python
 
 from engine import Engine
@@ -27,7 +27,7 @@ def test(*words):
     """
     print(
         StoryCollection(
-            pathq(DIR.key).ext("story"), Engine(DIR.key, {"overwrite artefacts": True})
+            pathq(DIR.key).ext("story"), Engine(DIR, {"overwrite artefacts": True})
         ).shortcut(*words).play().report()
     )
 
@@ -39,7 +39,7 @@ def ci():
     #lint()
     print(
         StoryCollection(
-            pathq(DIR.key).ext("story"), Engine(DIR.key, {})
+            pathq(DIR.key).ext("story"), Engine(DIR, {})
         ).ordered_by_name().play().report()
     )
 

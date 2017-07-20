@@ -13,30 +13,20 @@ from path import Path
 from pexpect import EOF
 import sys
 import hitchstory
-from hitchrun import genpath
 from strictyaml import Int
 from hitchstory import validate
 
 
-class Paths(object):
-    def __init__(self, keypath):
-        self.genpath = genpath
-        self.keypath = keypath
-        self.project = keypath.parent
-        self.state = keypath.parent.joinpath("state")
-        self.engine = keypath
-        self.hitch = genpath
-
-
 class Engine(hitchstory.BaseEngine):
     """Hitch bootstrap engine tester."""
-    def __init__(self, keypath, settings):
-        self.path = Paths(keypath)
+    def __init__(self, paths, settings):
+        self.path = paths
         self.settings = settings
 
 
     def set_up(self):
-        self.path.project = self.path.engine.parent
+        self.path.state = self.path.gen.joinpath("state")
+        self.path.engine = self.path.key
         self.path.state = self.path.engine.parent.joinpath("state")
 
         if self.path.state.exists():
@@ -44,7 +34,7 @@ class Engine(hitchstory.BaseEngine):
         self.path.state.mkdir()
 
         box = StandardBox(Path("~/.hitchpkg").expand(), "ubuntu-trusty-64")
-        self.vm = Vagrant("hitchrun", box, self.path.hitch)
+        self.vm = Vagrant("hitchrun", box, self.path.gen)
         self.vm = self.vm.synced_with(self.path.project, "/hitchrun/")
 
         if not self.vm.snapshot_exists("ubuntu-1604-installed"):
