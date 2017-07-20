@@ -27,11 +27,11 @@ def run():
         sys.exit(1)
 
     if len(commands) == 0 or len(commands) == 1 and commands[0] in ['-h', '--help', 'help']:
-        print("Usage: h command [args]\n")
+        print("Usage: hk command [args]\n")
         if cc.doc() is not None:
             print("%s\n" % cc.doc())
         print(cc.commands_help())
-        print("Run 'h help [command]' to get more help on a particular command.")
+        print("Run 'hk help [command]' to get more help on a particular command.")
     elif len(commands) > 1 and commands[0] in ['-h', '--help', 'help']:
         command = commands[1]
         if command in cc.command_list():
@@ -40,7 +40,7 @@ def run():
             print(cc.commands[command]['helptext'])
         else:
             print(
-                "Command '{0}' not found in {1}. Type 'h help' to see a full list of commands.".format(
+                "Command '{0}' not found in {1}. Type 'hk help' to see a full list of commands.".format(
                     command, cc.hitchkey_file
                 )
             )
