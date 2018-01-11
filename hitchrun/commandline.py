@@ -14,6 +14,10 @@ from path import Path
 def run():
     """Run hitch bootstrap CLI"""
     packages.ensure_hitchreqs_synced()
+
+    if not packages.hvenv().parent.joinpath("share").exists():
+        packages.hvenv().parent.joinpath("share").mkdir()
+
     parser = argparse.ArgumentParser(add_help=False, prefix_chars=[None, ])
     cc = key_file.KeyFile(packages.keypath())
     parser.add_argument("commands", nargs='*', default=None).completer = cc.command_completer
