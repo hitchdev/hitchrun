@@ -15,8 +15,8 @@ def run():
     """Run hitch bootstrap CLI"""
     packages.ensure_hitchreqs_synced()
 
-    if not packages.hvenv().parent.joinpath("share").exists():
-        packages.hvenv().parent.joinpath("share").mkdir()
+    if not packages.hvenv().parent.parent.joinpath("share").exists():
+        packages.hvenv().parent.parent.joinpath("share").mkdir()
 
     parser = argparse.ArgumentParser(add_help=False, prefix_chars=[None, ])
     cc = key_file.KeyFile(packages.keypath())
