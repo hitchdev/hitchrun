@@ -16,6 +16,43 @@ class PathGroup(object):
         self.__dict__[name] = path
 
 
+def hvenv():
+    """Get Hvenv folder."""
+    return Path(sys.executable).joinpath("..", "..").abspath()
+
+
+def keypath():
+    """Get the project directory by working backwards from the virtualenv python."""
+    assert hvenv().joinpath("linkfile").exists()
+    assert Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip()).exists()
+    return Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip())
+
+
+def absgenpath():
+    """Get the absolute path of the genpath."""
+    return hvenv().parent
+
+
+def clean():
+    """Clean the genpath."""
+    if keypath().joinpath("gen").exists():
+        keypath().joinpath("gen").remove()
+    if keypath().joinpath("__pycache__").exists():
+        keypath().joinpath("__pycache__").rmtree()
+    if absgenpath().exists():
+        absgenpath().rmtree()
+
+
+def upgradepip():
+    """Upgrade hvenv setuptools and then pip."""
+    Command(hvenv().joinpath("bin", "easy_install"))(
+        "--upgrade", "setuptools"
+    ).in_dir(keypath()).run()
+    Command(hvenv().joinpath("bin", "pip"))(
+        "install",  "pip", "--upgrade"
+    ).in_dir(keypath()).run()
+
+
 def paths():
     p = PathGroup(
         hvenv=Path(sys.executable).joinpath("..", "..").abspath(),
@@ -27,17 +64,6 @@ def paths():
     p.frozenreqstxt = p.hvenv.joinpath("frozenreqs.txt")
     p.frozenreqsin = p.hvenv.joinpath("frozenreqs.in")
     return p
-
-def hvenv():
-    """Get Hvenv folder."""
-    return Path(sys.executable).joinpath("..", "..").abspath()
-
-
-def keypath():
-    """Get the project directory by working backwards from the virtualenv python."""
-    assert hvenv().joinpath("linkfile").exists()
-    assert Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip()).exists()
-    return Path(hvenv().joinpath("linkfile").bytes().decode("utf8").strip())
 
 
 def frozenreqstxt():
@@ -121,7 +147,6 @@ def ensure_hitchreqs_synced():
         compile_hitchreqs_in()
         pip_sync()
         trigger_rerun = True
-
 
     if not path.frozenreqsin.exists() or not path.frozenreqstxt.exists():
         print("First run")

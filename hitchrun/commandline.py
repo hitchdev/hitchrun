@@ -24,6 +24,17 @@ def run():
     argcomplete.autocomplete(parser)
     commands = parser.parse_args().commands
 
+    if len(commands) == 1 and commands[0] in ["--upgrade", "--clean", "--upgradepip",]:
+        if commands[0] == '--upgrade':
+            packages.compile_hitchreqs_in()
+            sys.exit(0)
+        elif commands[0] == '--clean':
+            packages.clean()
+            sys.exit(0)
+        elif commands[0] == '--upgradepip':
+            packages.upgradepip()
+            sys.exit(0)
+
     returnval = 0
 
     if len(cc.commands) == 0:
@@ -36,10 +47,15 @@ def run():
             print("%s\n" % cc.doc())
         print(cc.commands_help())
         print("Run 'hk help [command]' to get more help on a particular command.")
+        print()
+        print()
+        print("     hk --upgrade - Upgrade all dependencies in hitchreqs.in")
+        print("  hk --upgradepip - Upgrade hitch virtualenv's setuptools and pip")
+        print("       hk --clean - Delete gen folder")
     elif len(commands) > 1 and commands[0] in ['-h', '--help', 'help']:
         command = commands[1]
         if command in cc.command_list():
-            print("Usage: h %s %s" % (command, cc.arg_help(command)))
+            print("Usage: hk %s %s" % (command, cc.arg_help(command)))
             print()
             print(cc.commands[command]['helptext'])
         else:
