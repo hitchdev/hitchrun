@@ -1,2 +1,5 @@
 - Remove freezereqs.txt if error occurs.
 - When ctrl-c happens on a sync of requirements files save the hitchreqs.txt files atomically.
+
+Untested:
+- cleanshare
