@@ -24,7 +24,9 @@ def run():
     argcomplete.autocomplete(parser)
     commands = parser.parse_args().commands
 
-    if len(commands) == 1 and commands[0] in ["--upgrade", "--clean", "--upgradepip",]:
+    if len(commands) == 1 and commands[0] in [
+        "--upgrade", "--clean", "--upgradepip", "--cleanshare",
+    ]:
         if commands[0] == '--upgrade':
             packages.compile_hitchreqs_in()
             sys.exit(0)
@@ -52,8 +54,9 @@ def run():
         print("Run 'hk help [command]' to get more help on a particular command.")
         print()
         print()
-        print("     hk --upgrade - Upgrade all dependencies in hitchreqs.in")
         print("  hk --upgradepip - Upgrade hitch virtualenv's setuptools and pip")
+        print("     hk --upgrade - Upgrade all dependencies in hitchreqs.in")
+        print("  hk --cleanshare - Delete ~/.hitch/share/ folder.")
         print("       hk --clean - Delete gen folder")
     elif len(commands) > 1 and commands[0] in ['-h', '--help', 'help']:
         command = commands[1]

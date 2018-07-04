@@ -35,8 +35,10 @@ def absgenpath():
 
 def cleanshare():
     """Clean the ~/.hitch/share folder."""
-    if packages.hvenv().parent.parent.joinpath("share").exists():
-        packages.hvenv().parent.parent.joinpath("share").rmtree()
+    share = packages.hvenv().parent.parent.joinpath("share")
+    if share.exists():
+        share.rmtree()
+    share.makedirs()
 
 
 def clean():
