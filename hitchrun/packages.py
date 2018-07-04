@@ -33,6 +33,12 @@ def absgenpath():
     return hvenv().parent
 
 
+def cleanshare():
+    """Clean the ~/.hitch/share folder."""
+    if packages.hvenv().parent.parent.joinpath("share").exists():
+        packages.hvenv().parent.parent.joinpath("share").rmtree()
+
+
 def clean():
     """Clean the genpath."""
     if keypath().joinpath("gen").exists():
@@ -165,4 +171,4 @@ def ensure_hitchreqs_synced():
         trigger_rerun = True
 
     if trigger_rerun:
-        os.execvp(sys.argv[0], sys.argv)
+        os.execv(sys.argv[0], sys.argv)

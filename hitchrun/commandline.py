@@ -31,6 +31,9 @@ def run():
         elif commands[0] == '--clean':
             packages.clean()
             sys.exit(0)
+        elif commands[0] == '--cleanshare':
+            packages.cleanshare()
+            sys.exit(0)
         elif commands[0] == '--upgradepip':
             packages.upgradepip()
             sys.exit(0)
