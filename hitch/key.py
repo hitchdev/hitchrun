@@ -3,7 +3,7 @@ from os import path
 from commandlib import run, Command
 import hitchpython
 import hitchserve
-from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
+#from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
 from hitchrun import DIR, expected
 from path import Path
 import strictyaml
@@ -16,20 +16,20 @@ from simex import DefaultSimex
 from hitchrun import hitch_maintenance
 from commandlib import python
 
-from engine import Engine
+#from engine import Engine
 
 
-@expected(strictyaml.exceptions.YAMLValidationError)
-@expected(exceptions.HitchStoryException)
-def test(*words):
-    """
-    Run test with words.
-    """
-    print(
-        StoryCollection(
-            pathq(DIR.key).ext("story"), Engine(DIR, {"overwrite artefacts": True})
-        ).shortcut(*words).play().report()
-    )
+#@expected(strictyaml.exceptions.YAMLValidationError)
+#@expected(exceptions.HitchStoryException)
+#def test(*words):
+    #"""
+    #Run test with words.
+    #"""
+    #print(
+        #StoryCollection(
+            #pathq(DIR.key).ext("story"), Engine(DIR, {"overwrite artefacts": True})
+        #).shortcut(*words).play().report()
+    #)
 
 
 def ci():
