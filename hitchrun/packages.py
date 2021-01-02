@@ -135,6 +135,11 @@ def pip_sync():
         sys.exit(1)
 
 
+def first_run():
+    keypath().joinpath("hitchreqs.in").copy(frozenreqsin())
+    keypath().joinpath("hitchreqs.txt").copy(frozenreqstxt())
+
+
 def ensure_hitchreqs_synced():
     """
     Check packages installed are in sync with what is in hitchreqs.txt.
@@ -158,13 +163,15 @@ def ensure_hitchreqs_synced():
 
     if not path.frozenreqsin.exists() or not path.frozenreqstxt.exists():
         print("First run")
-        compile_hitchreqs_in()
+        keypath().joinpath("hitchreqs.in").copy(frozenreqsin())
+        pip_sync()
         trigger_rerun = True
 
     if frozenreqsin().bytes().decode('utf8') != keypath().joinpath("hitchreqs.in").bytes().decode('utf8'):
-        print("hitchreqs.in changed, re-compiling hitchreqs.txt")
-        compile_hitchreqs_in()
-        trigger_rerun = True
+        if frozenreqstxt().text() == hitchreqstxt().text():
+            print("hitchreqs.in changed, re-compiling hitchreqs.txt")
+            compile_hitchreqs_in()
+            trigger_rerun = True
 
     if not frozenreqstxt().exists() or \
         frozenreqstxt().bytes().decode("utf8") != keypath().joinpath("hitchreqs.txt").bytes().decode('utf8'):
